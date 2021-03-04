@@ -1,7 +1,6 @@
 # Description 
 In this project, the task is to analyze disaster data and form an api. 
 In this training, all tweets are natural disaster tweets.
-It also includes a web app which enables users to input messages to classigy them. 
 
 # There are three steps:
 
