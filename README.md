@@ -1,4 +1,5 @@
 # Description 
+When natural disasters occurs, many people use twitter to try and help people.
 In this project, the task is to analyze disaster data and form an api. 
 In this training, all tweets are natural disaster tweets.
 
