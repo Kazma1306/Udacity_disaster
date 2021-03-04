@@ -20,6 +20,16 @@ from sklearn.model_selection import GridSearchCV
 nltk.download(['punkt', 'stopwords', 'wordnet'])
 
 def load_data(database_filepath):
+    """
+    Loads data from database filepath
+    
+    Input:
+        :database_filepath: path to database to connect
+    Returns:
+        X: Dataframe, data for training and testing
+        Y: Dataframe, labels for data
+        category_names: Names  Y
+    """
     engine = create_engine('sqlite:///' + database_filepath)
     df = pd.read_sql('select * from messages', engine)
     X = df['message']
@@ -28,11 +38,19 @@ def load_data(database_filepath):
     return X, y, category_names
 
 def tokenize(text):
+    """
+    Text preprocess
+    Normalizes, tokenizes and lemms text
+    
+    :Input:
+        :text: String, tweet 
+    :Returns:
+        :clean_tokens: List of strings  
+    """
     
     # Normalize
     text = text.lower()
     
-    # Remove punctuation
     text = re.sub(r"[^a-zA-Z0-9]", " ", text)
     
     # tokenize
@@ -48,35 +66,52 @@ def tokenize(text):
 
 
 def build_model():
+    """
+    Input:
+       :None: 
+   :Returns:
+       :pipeline: Machine Learning pipeline 
+    """
     pipeline = Pipeline([
             ('vect', CountVectorizer(tokenizer=tokenize)),
             ('tfidf', TfidfTransformer()),
             ('clf', MultiOutputClassifier(AdaBoostClassifier()))
         ])
     
-#     parameters = {
-#             'vect__ngram_range': ((1, 1), (1, 2)),
-#             'vect__max_df': (0.5, 0.7, 1.0),
+    parameters = {
+#             'vect__ngram_range': (1, 2),
+            'vect__max_df': (0.5, 7.0),
 #             'tfidf__use_idf': (True, False)
-#         }
+            
+        }
 
-#     cv = GridSearchCV(pipeline, param_grid=parameters, verbose=2, n_jobs=-1)
-#     return cv
-    return pipeline
+    cv = GridSearchCV(pipeline, param_grid=parameters, verbose=2, n_jobs=-1)
+    return cv
 
 def evaluate_model(model, X_test, Y_test, category_names):
-    y_pred = model.predict(X_test)
-    y_pred_df = pd.DataFrame(y_pred, columns=category_names)
-    evaluation = {}
-    for column in Y_test.columns:
-        evaluation[column] = []
-        evaluation[column].append(precision_score(Y_test[column], y_pred_df[column], average='micro'))
-        evaluation[column].append(recall_score(Y_test[column], y_pred_df[column], average='micro'))
-        evaluation[column].append(f1_score(Y_test[column], y_pred_df[column], average='micro'))
-    print(pd.DataFrame(evaluation))
+    """
+    Input:
+       model:trained Model 
+       X_test: Dataframe
+       Y_test: Dataframe, actual labels 
+       category_names: List of strings
+        
+    """
+    Y_pred = model.predict(X_test)
+    Y_pred_df = pd.DataFrame(Y_pred, columns=category_names)
+    for col in category_names:
+        
+        print(category_names)
+        print(classification_report(Y_test[col], Y_pred_df[col]))
+        print('--------------------------------------------------------')
 
 
 def save_model(model, model_filepath):
+    """
+    Input:
+        model: pipeline/model
+       :model_filepath: String, filepath where model will be saved
+    """
     pickle.dump(model, open(model_filepath, 'wb'))
 
 
