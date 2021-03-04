@@ -79,9 +79,9 @@ def build_model():
         ])
     
     parameters = {
-#             'vect__ngram_range': (1, 2),
+            'vect__ngram_range': (1, 2),
             'vect__max_df': (0.5, 7.0),
-#             'tfidf__use_idf': (True, False)
+            'tfidf__use_idf': (True, False)
             
         }
 
