@@ -1,6 +1,20 @@
-# Disaster Response Pipeline Project
-
+# Description 
 In this project, the task is to analyze disaster data and form an api. It also includes a web app which enables users to input messages to classigy them. 
+# There are three steps:
+
+* Create an ETL which cleans the Data
+* Create a ML pipeline which performs feature extraction and trains a model
+* Take model and embed it into a webapp
+
+
+# Packages Used
+* sys
+* pandas
+* sqlalchemy
+* re
+* nltk
+* json
+* flask
 
 ### Instructions:
 1. Run the following commands in the project's root directory to set up your database and model.
